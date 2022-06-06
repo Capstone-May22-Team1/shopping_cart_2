@@ -1,10 +1,12 @@
 import Product from "./Product";
 
-const Products = () => {
+const Products = ({ products }) => {
   return (
     <div class="product-listing">
       <h2>Products</h2>
-      <Product />
+      {products.map(product => (
+        <Product key={product.id} product={product}/>
+      ))}
     </div>
   );
 };

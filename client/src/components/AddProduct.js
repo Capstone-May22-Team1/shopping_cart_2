@@ -1,4 +1,4 @@
-const AddProduct = () => {
+const AddProduct = ({ product, setProduct, setToggleAdd }) => {
   return (
     <div class="add-form visible">
       <p><a class="button add-product-button">Add A Product</a></p>
@@ -21,7 +21,7 @@ const AddProduct = () => {
 
         <div class="actions form-actions">
           <a class="button">Add</a>
-          <a class="button">Cancel</a>
+          <a class="button" onClick={() => setToggleAdd(false)}>Cancel</a>
         </div>
       </form>
     </div>
