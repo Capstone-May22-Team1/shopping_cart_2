@@ -16,7 +16,12 @@ const App = () => {
       const response = await axios.get('/api/products')
       setProducts(response.data)
     }
+    const fetchShoppingCart = async () => {
+      const response = await axios.get('/api/cart')
+      setShoppingCart(response.data)
+    }
     fetchProducts()
+    fetchShoppingCart()
   }, [])
 
   const handleAddProduct = async (newItem, callback) => {
@@ -50,21 +55,26 @@ const App = () => {
     const cartItem = {productId: item._id}
     const response = await axios.post('/api/add-to-cart', cartItem)
     const updatedProduct = response.data.product
-    const item = response.data.item
+    const newItem = response.data.item
     
-    setShoppingCart = shoppingCart.concat(item)
+    setShoppingCart(shoppingCart.concat(newItem))
     setProducts(products.map(product => {
-      if (product._id === id) {
-        return response.data
+      if (product._id === updatedProduct._id) {
+        return updatedProduct
       } else {
         return product
       }
     }))
   }
 
+  const handleCheckout = async () => {
+    await axios.post(`api/checkout`);
+    setShoppingCart([]);
+  }
+
   return (
     <div id="app">
-      <ShoppingCart/>
+      <ShoppingCart shoppingCart={shoppingCart} onCheckout={handleCheckout}/>
       <main>
         <Products products={products} onDeleteProduct={handleDeleteProduct} onUpdateProduct={handleUpdateProduct} onAddToCart={handleAddToCart}/>
         {(toggleAdd) 
