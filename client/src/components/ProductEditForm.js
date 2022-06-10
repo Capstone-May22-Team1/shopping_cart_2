@@ -1,13 +1,21 @@
 import { useState } from 'react'
+import { productUpdated } from '../actions/productActions';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 const ProductEditForm = ({ product,  setShowForm, onUpdateProduct }) => {
   const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price);
   const [quantity, setQuantity] = useState(product.quantity);
+  const dispatch = useDispatch()
 
-  const handleFormSubmit = (e) => {
+  const handleUpdateProduct = async (e) => {
     const updatedItem = {title, price, quantity}
-    onUpdateProduct(updatedItem, product._id, resetForm)
+    let id = product._id
+
+    const response = await axios.put(`/api/products/${id}`, updatedItem);
+    dispatch(productUpdated(response.data));
+    resetForm()
   }
 
   const resetForm = () => {
@@ -37,7 +45,7 @@ const ProductEditForm = ({ product,  setShowForm, onUpdateProduct }) => {
         </div>
 
         <div class="actions form-actions">
-          <a class="button" onClick={handleFormSubmit}>Update</a>
+          <a class="button" onClick={handleUpdateProduct}>Update</a>
           <a class="button" onClick={() => setShowForm(false)}>Cancel</a>
         </div>
       </form>

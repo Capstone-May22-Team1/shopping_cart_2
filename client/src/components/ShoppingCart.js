@@ -1,6 +1,26 @@
 import ShoppingCartItem from './ShoppingCartItem'
+import axios from "axios";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { cartItemsReceived, cartCheckedOut } from '../actions/cartItemActions';
 
-const ShoppingCart = ({ shoppingCart, onCheckout }) => {
+const ShoppingCart = () => {
+  const dispatch = useDispatch();
+  const shoppingCart = useSelector((state) => state.cartItems)
+
+  useEffect(() => {
+    const fetchShoppingCart = async () => {
+      const { data } = await axios.get('/api/cart')
+      dispatch(cartItemsReceived(data));
+    }
+    fetchShoppingCart()
+  }, [dispatch])
+
+  const handleCheckout = async () => {
+    await axios.post(`api/checkout`);
+    dispatch(cartCheckedOut());
+  }
+
   const getCartTotal = () => {
     const total = shoppingCart.reduce((prevSum, currItem) => prevSum + currItem.price * currItem.quantity, 0)
     return total
@@ -37,7 +57,7 @@ const ShoppingCart = ({ shoppingCart, onCheckout }) => {
           }
           
 
-          <a class={`button checkout ${isDisabled}`} onClick={() => onCheckout()}>Checkout</a>
+          <a class={`button checkout ${isDisabled}`} onClick={handleCheckout}>Checkout</a>
         </div>
       </header>
     </div>

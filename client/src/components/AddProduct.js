@@ -1,13 +1,19 @@
 import { useState } from 'react'
+import { productAdded } from '../actions/productActions';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
-const AddProduct = ({ product, setProduct, setToggleAdd, onAddProduct }) => {
+const AddProduct = ({ setToggleAdd }) => {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
 
-  const handleFormSubmit = (e) => {
+  const dispatch = useDispatch();
+  const handleAddProduct = async () => {
     const newItem = {title, price, quantity}
-    onAddProduct(newItem, resetForm)
+    const response = await axios.post('/api/products', newItem)
+    dispatch(productAdded(response.data));
+    resetForm();
   }
 
   const resetForm = () => {
@@ -38,7 +44,7 @@ const AddProduct = ({ product, setProduct, setToggleAdd, onAddProduct }) => {
         </div>
 
         <div class="actions form-actions">
-          <a class="button" onClick={handleFormSubmit}>Add</a>
+          <a class="button" onClick={handleAddProduct}>Add</a>
           <a class="button" onClick={() => setToggleAdd(false)}>Cancel</a>
         </div>
       </form>
