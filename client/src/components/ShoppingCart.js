@@ -1,6 +1,21 @@
 import ShoppingCartItem from './ShoppingCartItem'
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartItems, checkOut } from '../features/cartItems/cartItems';
 
-const ShoppingCart = ({ shoppingCart, onCheckout }) => {
+
+const ShoppingCart = () => {
+  const dispatch = useDispatch()
+  const shoppingCart = useSelector((state) => state.cartItems)
+
+  useEffect(() => {
+    dispatch(fetchCartItems())
+  }, [dispatch])
+
+  const handleCheckout = async (e) => {
+    dispatch(checkOut())
+  }
+
   const getCartTotal = () => {
     const total = shoppingCart.reduce((prevSum, currItem) => prevSum + currItem.price * currItem.quantity, 0)
     return total
@@ -31,13 +46,13 @@ const ShoppingCart = ({ shoppingCart, onCheckout }) => {
                 <ShoppingCartItem cartItem={cartItem} key={cartItem._id} />
               ))}
               <tr>
-                <td colspan="3" class="total">Total: ${getCartTotal()}</td>
+                <td colSpan="3" class="total">Total: ${getCartTotal()}</td>
               </tr>
             </table>
           }
           
 
-          <a class={`button checkout ${isDisabled}`} onClick={() => onCheckout()}>Checkout</a>
+          <a class={`button checkout ${isDisabled}`} onClick={handleCheckout}>Checkout</a>
         </div>
       </header>
     </div>

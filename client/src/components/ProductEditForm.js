@@ -1,13 +1,16 @@
 import { useState } from 'react'
+import { useDispatch } from "react-redux"
+import { updateProduct } from '../features/products/products';
 
-const ProductEditForm = ({ product,  setShowForm, onUpdateProduct }) => {
+const ProductEditForm = ({ product,  setShowForm }) => {
   const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price);
   const [quantity, setQuantity] = useState(product.quantity);
+  const dispatch = useDispatch();
 
   const handleFormSubmit = (e) => {
-    const updatedItem = {title, price, quantity}
-    onUpdateProduct(updatedItem, product._id, resetForm)
+    const updatedProduct = {title, price, quantity}
+    dispatch(updateProduct({ updatedProduct, id: product._id, callback: resetForm}))
   }
 
   const resetForm = () => {
