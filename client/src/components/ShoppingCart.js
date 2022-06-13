@@ -51,7 +51,7 @@ const ShoppingCart = () => {
                 <ShoppingCartItem cartItem={cartItem} key={cartItem._id} />
               ))}
               <tr>
-                <td colspan="3" class="total">Total: ${getCartTotal()}</td>
+                <td colSpan="3" class="total">Total: ${getCartTotal()}</td>
               </tr>
             </table>
           }
