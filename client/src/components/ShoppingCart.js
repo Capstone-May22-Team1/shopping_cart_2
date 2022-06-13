@@ -1,24 +1,22 @@
 import ShoppingCartItem from './ShoppingCartItem'
 import axios from "axios";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { cartItemsReceived, cartCheckedOut } from '../actions/cartItemActions';
+import { useEffect, useContext } from "react";
+import { CartContext } from '../context/cartItem-context';
 
 const ShoppingCart = () => {
-  const dispatch = useDispatch();
-  const shoppingCart = useSelector((state) => state.cartItems)
+  const { shoppingCart, setShoppingCart } = useContext(CartContext);
 
   useEffect(() => {
-    const fetchShoppingCart = async () => {
+    const fetchCartItems = async () => {
       const { data } = await axios.get('/api/cart')
-      dispatch(cartItemsReceived(data));
+      setShoppingCart(data)
     }
-    fetchShoppingCart()
-  }, [dispatch])
+    fetchCartItems()
+  }, [])
 
   const handleCheckout = async () => {
     await axios.post(`api/checkout`);
-    dispatch(cartCheckedOut());
+    setShoppingCart([]);
   }
 
   const getCartTotal = () => {

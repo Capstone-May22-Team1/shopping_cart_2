@@ -1,21 +1,14 @@
 import Product from "./Product";
-import axios from "axios";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { productsReceived } from "../actions/productActions";
+import { useEffect, useContext } from "react";
+import { fetchProducts } from "../context/products-context";
+import { ProductContext } from "../context/products-context";
 
 const Products = () => {
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.products);
+  const { products, dispatch: productsDispatch } = useContext(ProductContext);
  
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await axios.get('/api/products')
-      dispatch(productsReceived(response.data))
-    }
-
-    fetchProducts()
-  }, [dispatch])
+    fetchProducts(productsDispatch)
+  }, [productsDispatch])
 
   return (
     <div class="product-listing">

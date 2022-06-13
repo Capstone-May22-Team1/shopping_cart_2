@@ -1,13 +1,13 @@
 import axios from 'axios'
-import { useDispatch } from 'react-redux';
-import { productDeleted } from '../actions/productActions';
+import { useContext } from 'react';
+import { productDeleted } from '../context/products-context';
+import { ProductContext } from '../context/products-context';
 
 const ProductDetails = ({product}) => {
-  const dispatch = useDispatch()
+  const { products, dispatch: productsDispatch } = useContext(ProductContext);
 
   const handleDeleteProduct = async (id) => {
-    await axios.delete(`/api/products/${id}`);
-    dispatch(productDeleted({id}));
+    productDeleted(productsDispatch, id);
   }
 
   return (

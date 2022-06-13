@@ -3,14 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
-import { Provider } from "react-redux";
-import store from "./lib/store";
+import { ProductProvider } from "./context/products-context"
+import { CartProvider } from "./context/cartItem-context"
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <ProductProvider>
+      <CartProvider>
+        <App />
+      </CartProvider>
+    </ProductProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

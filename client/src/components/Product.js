@@ -1,23 +1,41 @@
 import ProductDetails from "./ProductDetails";
 import ProductEditForm from "./ProductEditForm";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useContext } from "react";
+
 import axios from "axios";
-import { cartItemAdded } from "../actions/cartItemActions";
-import { productUpdated } from "../actions/productActions";
+import { CartContext } from "../context/cartItem-context";
+import { ProductContext } from "../context/products-context";
+import { quantityDecremented } from "../context/products-context";
 
 const Product = ({ product }) => {
+  const { shoppingCart, setShoppingCart } = useContext(CartContext);
+  const { dispatch: productsDispatch } = useContext(ProductContext);
+
   let [ showForm, setShowForm ] = useState(false)
-  const dispatch = useDispatch();
 
   const handleAddToCart = async (e) => {
     const cartItem = {productId: product._id}
     const response = await axios.post('/api/add-to-cart', cartItem)
     const updatedProduct = response.data.product
     const newItem = response.data.item
+    let newShoppingCart;
+
+    if (shoppingCart.some(item => item._id === newItem._id)) {
+      newShoppingCart = shoppingCart.map(i => {
+        if (i._id === newItem._id) {
+          i.quantity++
+          return i
+        } else {
+          return i
+        } 
+      })
+    } else {
+      newShoppingCart = shoppingCart.concat(newItem);
+    }
     
-    dispatch(cartItemAdded(newItem))
-    dispatch(productUpdated(updatedProduct))
+    setShoppingCart(newShoppingCart)
+    quantityDecremented(productsDispatch, updatedProduct)
   }
 
   let isDisabled = product.quantity === 0 ? 'disabled' : '';

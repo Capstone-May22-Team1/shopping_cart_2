@@ -1,19 +1,16 @@
-import { useState } from 'react'
-import { productAdded } from '../actions/productActions';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useState, useContext } from 'react'
+import { ProductContext } from '../context/products-context';
+import { addProducts } from '../context/products-context';
 
 const AddProduct = ({ setToggleAdd }) => {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const { products, dispatch: productsDispatch } = useContext(ProductContext);
 
-  const dispatch = useDispatch();
   const handleAddProduct = async () => {
     const newItem = {title, price, quantity}
-    const response = await axios.post('/api/products', newItem)
-    dispatch(productAdded(response.data));
-    resetForm();
+    addProducts(productsDispatch, newItem, resetForm);
   }
 
   const resetForm = () => {
